@@ -11,12 +11,13 @@ services:
       - 8003:80
     volumes:
       - ./nginx_container:/etc/nginx/conf.d:ro
-      - ./ketcher_container/build:/usr/share/nginx/html
-      - nginx_html:/srv/www
+      # - ./ketcher_container/build:/usr/share/nginx/html
+      # - nginx_html:/srv/www
     links:
       - indigo_container
     depends_on:
       - indigo_container
+      - ketcher_container
 
   indigo_container:
     image: epmlsop/indigo_service:latest
@@ -38,7 +39,7 @@ services:
     volumes:
       # - ./ketcher_container:/ketcher_container
       - /ketcher_container/node_modules
-      - build_volume:/ketcher_container/build
+      # - build_volume:/ketcher_container/build
     #   - /ketcher_container/packages/ketcher-core/node_modules
     #   - /ketcher_container/packages/ketcher-react/node_modules
     ports:
@@ -50,7 +51,7 @@ services:
       - REACT_APP_HOSTED_INDIGO_URL=http://localhost:8003/v2/
     command: yarn start
   
-volumes:
-  build_volume:
-  nginx_html:
+# volumes:
+#   build_volume:
+#   nginx_html:
   

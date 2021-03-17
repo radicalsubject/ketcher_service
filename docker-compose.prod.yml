@@ -2,13 +2,40 @@ version: '3.7'
 
 services:
 
-  ketcher_container:
-    container_name: ketcher_container_prod
+  sample-prod:
+    container_name: sample-prod
     build:
       context: ./ketcher_container
       dockerfile: Dockerfile.prod
-    volumes:
-      - ./nginx_container:/etc/nginx/conf.d:ro
     ports:
-      - '1337:80'
-    command: nginx -g daemon off;
+      - 1337:80
+    command: nginx -g "daemon off;"
+
+  # ketcher_container:
+  #   container_name: ketcher_container_prod
+  #   build:
+  #     context: ./ketcher_container
+  #     dockerfile: Dockerfile.prod
+  #   volumes:
+  #     - ./nginx_container:/etc/nginx/conf.d:ro
+  #   ports:
+  #     - '1337:80'
+  #   command: nginx -g "daemon off;"
+  
+  # nginx_container:
+  #   image: nginx:stable-alpine
+  #   container_name: nginx_container
+  #   restart: always
+  #   environment:
+  #     - INDIGO_URL=http://indigo_container:8002
+  #   ports:
+  #     - 8003:80
+  #   volumes:
+  #     - ./nginx_container:/etc/nginx/conf.d:ro
+  #     # - ./ketcher_container/build:/usr/share/nginx/html
+  #     # - nginx_html:/srv/www
+  #   links:
+  #     - indigo_container
+  #   depends_on:
+  #     - indigo_container
+  #     - ketcher_container
