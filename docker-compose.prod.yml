@@ -1,41 +1,42 @@
 version: '3.7'
 
 services:
-
-  sample-prod:
-    container_name: sample-prod
+  ketcher_container:
+    container_name: ketcher_container
+    image: ketcher_container:latest
     build:
       context: ./ketcher_container
-      dockerfile: Dockerfile.prod
-    ports:
-      - 1337:80
-    command: nginx -g "daemon off;"
+      dockerfile: Dockerfile.build 
 
-  # ketcher_container:
-  #   container_name: ketcher_container_prod
-  #   build:
-  #     context: ./ketcher_container
-  #     dockerfile: Dockerfile.prod
-  #   volumes:
-  #     - ./nginx_container:/etc/nginx/conf.d:ro
-  #   ports:
-  #     - '1337:80'
-  #   command: nginx -g "daemon off;"
-  
-  # nginx_container:
-  #   image: nginx:stable-alpine
-  #   container_name: nginx_container
-  #   restart: always
-  #   environment:
-  #     - INDIGO_URL=http://indigo_container:8002
-  #   ports:
-  #     - 8003:80
-  #   volumes:
-  #     - ./nginx_container:/etc/nginx/conf.d:ro
-  #     # - ./ketcher_container/build:/usr/share/nginx/html
-  #     # - nginx_html:/srv/www
-  #   links:
-  #     - indigo_container
-  #   depends_on:
-  #     - indigo_container
-  #     - ketcher_container
+  nginx_container:
+    container_name: nginx_container
+    image: nginx_container:prod_build
+    restart: always
+    # environment:
+    #   - INDIGO_URL=http://indigo_container:8002
+    build:
+      context: ./nginx_container
+      dockerfile: Dockerfile.build
+    ports:
+      - 81:80
+      # - 8003:80
+    # volumes:
+    #   - ./nginx_container:/etc/nginx/conf.d:ro
+    command: nginx -g "daemon off;"
+    links:
+      - indigo_container
+    depends_on:
+      - indigo_container
+      - ketcher_container
+
+  indigo_container:
+    image: epmlsop/indigo_service:latest
+    container_name: indigo_container
+    restart: always
+    environment:
+      - PYTHONPATH=${INDIGO_SERVICE_PYTHONPATH:-/srv/indigo-python}
+      - INDIGO_UWSGI_RUN_PARAMETERS=--plugin python3 --py-autoreload=1
+      - PYTHONDONTWRITEBYTECODE=1
+    ports:
+      - 8002:8002
+    command: /bin/sh -c "supervisord -n"
