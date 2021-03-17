@@ -12,22 +12,22 @@ services:
     container_name: nginx_container
     image: nginx_container:prod_build
     restart: always
-    # environment:
-    #   - INDIGO_URL=http://indigo_container:8002
+    environment:
+      - INDIGO_URL=http://indigo_container:8002
     build:
       context: ./nginx_container
       dockerfile: Dockerfile.build
     ports:
       - 81:80
-      # - 8003:80
+      - 8003:81
     # volumes:
     #   - ./nginx_container:/etc/nginx/conf.d:ro
-    command: nginx -g "daemon off;"
     links:
       - indigo_container
     depends_on:
       - indigo_container
       - ketcher_container
+    command: nginx -g "daemon off;"
 
   indigo_container:
     image: epmlsop/indigo_service:latest
