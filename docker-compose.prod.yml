@@ -1,0 +1,12 @@
+version: '3.7'
+
+services:
+
+  ketcher_container:
+    container_name: ketcher_container_prod
+    build:
+      context: ./ketcher_container
+      dockerfile: Dockerfile.prod
+    ports:
+      - '1337:80'
+    command: nginx -g daemon off;

@@ -1,0 +1,56 @@
+version: '3.7'
+
+services:
+  nginx_container:
+    image: nginx:stable-alpine
+    container_name: nginx_container
+    restart: always
+    environment:
+      - INDIGO_URL=http://indigo_container:8002
+    ports:
+      - 8003:80
+    volumes:
+      - ./nginx_container:/etc/nginx/conf.d:ro
+      - ./ketcher_container/build:/usr/share/nginx/html
+      - nginx_html:/srv/www
+    links:
+      - indigo_container
+    depends_on:
+      - indigo_container
+
+  indigo_container:
+    image: epmlsop/indigo_service:latest
+    container_name: indigo_container
+    restart: always
+    environment:
+      - PYTHONPATH=${INDIGO_SERVICE_PYTHONPATH:-/srv/indigo-python}
+      - INDIGO_UWSGI_RUN_PARAMETERS=--plugin python3 --py-autoreload=1
+      - PYTHONDONTWRITEBYTECODE=1
+    ports:
+      - 8002:8002
+    command: /bin/sh -c "supervisord -n"
+
+  ketcher_container: # adding react docker service https://mherman.org/blog/dockerizing-a-react-app/
+    build: ./ketcher_container
+    container_name: ketcher_container
+    # tty: true # this fucker is a must for container to run - why?
+    restart: unless-stopped
+    volumes:
+      # - ./ketcher_container:/ketcher_container
+      - /ketcher_container/node_modules
+      - build_volume:/ketcher_container/build
+    #   - /ketcher_container/packages/ketcher-core/node_modules
+    #   - /ketcher_container/packages/ketcher-react/node_modules
+    ports:
+      - 3001:3000
+      - 5001:5000
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - COMPOSE_CONVERT_WINDOWS_PATHS=1 # unnesessary till now, but maybe itll help someday
+      - REACT_APP_HOSTED_INDIGO_URL=http://localhost:8003/v2/
+    command: yarn start
+  
+volumes:
+  build_volume:
+  nginx_html:
+  

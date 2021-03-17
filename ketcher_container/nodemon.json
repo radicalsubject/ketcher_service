@@ -1,0 +1,6 @@
+{
+    "verbose": true,
+    "watch": ["./src"],
+    "ignore": ["node_modules/"],
+    "exec": "nodemon --exec yarn start"
+}
