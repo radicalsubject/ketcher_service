@@ -8,11 +8,9 @@ services:
     environment:
       - INDIGO_URL=http://indigo_container:8002
     ports:
-      - 8003:80
+      - 8003:8003
     volumes:
       - ./nginx_container:/etc/nginx/conf.d:ro
-      # - ./ketcher_container/build:/usr/share/nginx/html
-      # - nginx_html:/srv/www
     links:
       - indigo_container
     depends_on:
@@ -32,14 +30,14 @@ services:
     command: /bin/sh -c "supervisord -n"
 
   ketcher_container: # adding react docker service https://mherman.org/blog/dockerizing-a-react-app/
-    build: ./ketcher_container
+    build:
+      context: ./ketcher_container
+      dockerfile: Dockerfile
     container_name: ketcher_container
     # tty: true # this fucker is a must for container to run - why?
     restart: unless-stopped
     volumes:
-      # - ./ketcher_container:/ketcher_container
       - /ketcher_container/node_modules
-      # - build_volume:/ketcher_container/build
     #   - /ketcher_container/packages/ketcher-core/node_modules
     #   - /ketcher_container/packages/ketcher-react/node_modules
     ports:

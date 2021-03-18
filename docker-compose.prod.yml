@@ -18,10 +18,10 @@ services:
       context: ./nginx_container
       dockerfile: Dockerfile.build
     ports:
-      - 81:80
-      - 8003:81
-    # volumes:
-    #   - ./nginx_container:/etc/nginx/conf.d:ro
+      - 8080:80
+      - 8003:8003
+    volumes:
+      - ./nginx_container:/etc/nginx/conf.d:ro
     links:
       - indigo_container
     depends_on:

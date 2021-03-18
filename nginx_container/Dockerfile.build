@@ -1,3 +1,4 @@
 FROM ketcher_container:latest as build
 FROM nginx:stable-alpine
+RUN apk add nano
 COPY --from=build /ketcher_container/build /usr/share/nginx/html
