@@ -38,8 +38,8 @@ services:
     restart: unless-stopped
     volumes:
       - /ketcher_container/node_modules
-    #   - /ketcher_container/packages/ketcher-core/node_modules
-    #   - /ketcher_container/packages/ketcher-react/node_modules
+      - /ketcher_container/packages/ketcher-core/node_modules
+      - /ketcher_container/packages/ketcher-react/node_modules
     ports:
       - 3001:3000
       - 5001:5000

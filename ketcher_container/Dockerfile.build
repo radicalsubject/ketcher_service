@@ -8,4 +8,6 @@ ENV PATH /ketcher_container/node_modules/.bin:$PATH
 # add app
 COPY . .
 RUN yarn
+RUN npm cache clean --force
+RUN yarn workspaces run build
 RUN yarn build
