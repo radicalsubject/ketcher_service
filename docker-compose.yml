@@ -49,7 +49,4 @@ services:
       - REACT_APP_HOSTED_INDIGO_URL=http://localhost:8003/v2/
     command: yarn start
   
-# volumes:
-#   build_volume:
-#   nginx_html:
   

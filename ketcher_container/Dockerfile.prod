@@ -1,5 +1,4 @@
 # build environment
-
 # pull official base image
 FROM node:alpine as build
 # set working directory

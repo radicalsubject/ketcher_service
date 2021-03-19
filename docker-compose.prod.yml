@@ -7,6 +7,10 @@ services:
     build:
       context: ./ketcher_container
       dockerfile: Dockerfile.build 
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - COMPOSE_CONVERT_WINDOWS_PATHS=1 # unnesessary till now, but maybe itll help someday
+      - REACT_APP_HOSTED_INDIGO_URL=http://localhost:8003/v2/
 
   nginx_container:
     container_name: nginx_container
