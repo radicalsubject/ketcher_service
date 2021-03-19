@@ -1,0 +1,310 @@
+// Workaround less issue:
+// https://github.com/less/less.js/issues/2004
+@import 'variables';
+
+.set-size(inherit) {
+}
+.set-size(small) {
+  #small-dim;
+}
+.set-size(large) {
+  #large-dim;
+}
+
+/////////////////////
+
+.collapsed(@dim: inherit) when not (@dim = none) {
+  position: relative;
+  overflow: hidden;
+  .collapsed-size(@dim);
+  .collapsed-icon;
+}
+
+.collapsed(none) {
+  position: static;
+  overflow: visible;
+  height: auto;
+  width: auto;
+
+  & > svg {
+    // dropdown
+    display: none;
+  }
+}
+
+.collapsed-size(@dim) {
+  .set-size(@dim);
+
+  height: @toolbar-size;
+  width: 100%; //@toolbar-size;
+}
+
+.collapsed-ifnot(@classname, @dim: inherit) {
+  .collapsed(@dim);
+  &.@{classname} {
+    overflow: visible;
+  }
+}
+
+.collapsed-icon() {
+  & > svg {
+    display: block;
+    width: 7px;
+    height: 7px;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+  }
+  &:hover > svg {
+    //.scale-highlight;
+    fill: @active-color;
+  }
+}
+
+/////////////////////
+// Highlight effects
+
+.highlight-scale(@scale) {
+  transition: transform, 0.2s, ease-out;
+  transform: scale(@scale);
+}
+
+.highlight-scale(none) {
+  transform: scale(1);
+}
+
+.highlight-shadow(inset, @color: @active-color) {
+  box-shadow: 0 -1px 6px fade(@color, 5%) inset, 0 1px 3px @color inset;
+}
+
+.highlight-shadow(@color: @active-color) when (iscolor(@color)) {
+  box-shadow: inset 0 0 1px 1px fade(@color, 12%);
+}
+
+.highlight-shadow(none) {
+  box-shadow: none;
+}
+
+.highlight-circle(@color: @active-color, @inset: '') {
+  border-radius: (@icon-size + @icon-padding) / 2;
+  box-shadow: ~'0 0 4px @{color} @{inset}';
+}
+
+.highlight-symbol(@color: @active-color) {
+  color: @active-color;
+  text-shadow: 1px 1px 3px @color;
+}
+
+.highlight-symbol-invert() {
+  background: #333;
+  text-shadow: 0 1px 10px white, 0 -1px 10px white;
+}
+
+.highlight-invert() {
+  background: #444;
+  color: white;
+  & > span {
+    color: white;
+  }
+  & > svg {
+    fill: white;
+    stroke: white;
+    stroke-width: 5;
+  }
+}
+
+.highlight-invert(disabled) {
+  background: inherit;
+  color: @disabled-color; // hint for menus
+}
+
+/////////////////////
+// Transition effects
+
+.transition-twirl(@time: 0.3s) {
+  transform: rotateX(0);
+  transition: transform @time;
+  &.hide {
+    transform-style: preserve-3d;
+    transform: perspective(350px) rotateX(-70deg);
+  }
+}
+
+.transition-zoom(@time: 0.3s) {
+  opacity: 1;
+  transform: scale(1);
+  transition: transform @time, opacity @time;
+
+  &.hide {
+    opacity: 0.2;
+    transform: scale(0.5);
+  }
+}
+
+//////////////////////////
+// Icon content & coloring
+
+.colorize(@color) when not (@color = inherit) {
+  color: @color;
+}
+
+////////////////////////////////////////////
+// Little bit jankie directions unification
+
+.orientation(horizontal) {
+  @main-rise: right;
+  @main-lose: left;
+  @main-dim: width;
+  @cross-rise: bottom;
+  @cross-lose: top;
+  @cross-dim: height;
+}
+
+.orientation(vertical) {
+  @main-rise: bottom;
+  @main-lose: top;
+  @main-dim: height;
+  @cross-rise: right;
+  @cross-lose: left;
+  @cross-dim: width;
+}
+
+.orientation(@dir) when (@dir = top), (@dir = bottom) {
+  .orientation(horizontal);
+}
+
+.orientation(@dir) when (@dir = left), (@dir = right) {
+  .orientation(vertical);
+}
+
+.direction(@dir) {
+  .to-index(top) {
+    @index: 0;
+  }
+  .to-index(right) {
+    @index: 1;
+  }
+  .to-index(bottom) {
+    @index: 2;
+  }
+  .to-index(left) {
+    @index: 3;
+  }
+  @directions: top right bottom left;
+  @orientations: horizontal vertical;
+  .to-index(@dir);
+
+  @main-start: extract(@directions, mod(@index, 4) + 1);
+  @main-end: extract(@directions, mod((@index + 2), 4) + 1);
+
+  @cross-start: extract(@directions, mod((@index + 3), 4) + 1);
+  @cross-end: extract(@directions, mod((@index + 1), 4) + 1);
+
+  @main-orient: extract(@orientations, mod(@index + 1, 2));
+  @cross-orient: extract(@orientations, mod(@index + 1, 2) + 1);
+}
+
+/////////////////////
+// Basic mixins
+
+.background-opacity(@color, @opacity) {
+  @rgba-color: rgba(red(@color), green(@color), blue(@color), @opacity);
+
+  background-color: @rgba-color;
+
+  background: none \9; // Hack for IE8
+  filter: e(
+    %(
+      "progid:DXImageTransform.Microsoft.gradient(startColorstr='%d', endColorstr='%d')",
+      argb(@rgba-color),
+      argb(@rgba-color)
+    )
+  );
+  //zoom: 1;
+  &:not([ie9]) {
+    // Do not apply to IE9 as it supports rgba
+    filter: progid:dximagetransform.microsoft.gradient(enabled='false');
+  }
+}
+
+.text-hide(transparent) {
+  font: ~'0/0' a;
+  color: transparent;
+  text-shadow: none;
+  background-color: transparent;
+  border: 0;
+}
+
+.text-hide(indent) {
+  @approximate-em-value: 12px / 1em;
+  @wider-than-any-screen: -9999em;
+
+  text-indent: @wider-than-any-screen * @approximate-em-value;
+  overflow: hidden;
+  text-align: left;
+}
+
+.text-hide() {
+  .text-hide(indent);
+}
+
+.reset-button() {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.remove-inline-spacing() {
+  // vanish horizontal spacing between inline blocks
+  font-size: 0.00001px;
+  -webkit-text-size-adjust: none;
+}
+
+.input() {
+  border-radius: 4px;
+  display: inline-block;
+  vertical-align: middle;
+  background: white;
+  line-height: 20 / 14;
+  height: 2.4em;
+  padding: 0.35em 0.15em 0.35em 0.3em;
+  margin: 2px;
+  border: 1px solid @border-color;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  box-sizing: border-box;
+  &:active,
+  &:focus {
+    outline: 0;
+  }
+  &:hover,
+  &:focus {
+    .highlight-shadow(black);
+  }
+
+  &[disabled],
+  &[readonly],
+  fieldset[disabled] & {
+    cursor: not-allowed;
+    //box-shadow: none;
+    background: #efefef;
+    opacity: 0.6;
+  }
+}
+
+.warning() {
+  color: @error-color;
+  &::before {
+    content: '⚠ ';
+  }
+}
+
+.dialog_body {
+  overflow: auto;
+}
+
+.kbd() {
+  display: none;
+  font: 0.8em monospace;
+  color: @border-color;
+}
