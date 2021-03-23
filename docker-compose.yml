@@ -1,34 +1,6 @@
 version: '3.7'
 
 services:
-  nginx_container:
-    image: nginx:stable-alpine
-    container_name: nginx_container
-    restart: always
-    environment:
-      - INDIGO_URL=http://indigo_container:8002
-    ports:
-      - 8003:8003
-    volumes:
-      - ./nginx_container:/etc/nginx/conf.d:ro
-    links:
-      - indigo_container
-    depends_on:
-      - indigo_container
-      - ketcher_container
-
-  indigo_container:
-    image: epmlsop/indigo_service:latest
-    container_name: indigo_container
-    restart: always
-    environment:
-      - PYTHONPATH=${INDIGO_SERVICE_PYTHONPATH:-/srv/indigo-python}
-      - INDIGO_UWSGI_RUN_PARAMETERS=--plugin python3 --py-autoreload=1
-      - PYTHONDONTWRITEBYTECODE=1
-    ports:
-      - 8002:8002
-    command: /bin/sh -c "supervisord -n"
-
   ketcher_container: # adding react docker service https://mherman.org/blog/dockerizing-a-react-app/
     build:
       context: ./ketcher_container
@@ -49,4 +21,32 @@ services:
       - REACT_APP_HOSTED_INDIGO_URL=http://localhost:8003/v2/
     command: yarn start
   
-  
+  nginx_container:
+    image: nginx:stable-alpine
+    container_name: nginx_container
+    restart: always
+    environment:
+      - INDIGO_URL=http://indigo_container:8002
+    ports:
+      - 8003:8003
+    volumes:
+      - ./nginx_container:/etc/nginx/conf.d:ro
+    links:
+      - indigo_container
+    depends_on:
+      - indigo_container
+      # - ketcher_container
+
+  indigo_container:
+    image: epmlsop/indigo_service:latest
+    container_name: indigo_container
+    restart: always
+    environment:
+      - PYTHONPATH=${INDIGO_SERVICE_PYTHONPATH:-/srv/indigo-python}
+      - INDIGO_UWSGI_RUN_PARAMETERS=--plugin python3 --py-autoreload=1
+      - PYTHONDONTWRITEBYTECODE=1
+    ports:
+      - 8002:8002
+    command: /bin/sh -c "supervisord -n"
+
+

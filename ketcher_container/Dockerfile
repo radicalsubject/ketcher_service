@@ -11,7 +11,7 @@ ENV PATH /ketcher_container/node_modules/.bin:$PATH
 COPY . ./
 RUN yarn 
 
-RUN yarn workspaces run build
+# RUN yarn workspaces run build
 
 # # start app
 # CMD ["npm", "start"]
