@@ -9,5 +9,10 @@ ENV PATH /ketcher_container/node_modules/.bin:$PATH
 COPY . .
 RUN yarn
 RUN npm cache clean --force
+
 RUN yarn workspaces run build
+# npm ls babel-jest ---> нужно понять какая гнида из packages ставит бабель 24v в то время как create-react-app ставить 26v. 
+# временное решение заключается в том, чтобы удалить перед билдом папку.
+RUN rm -rf /ketcher_container/node_modules/babel-jest /ketcher_container/node_modules/jest 
+
 RUN yarn build
