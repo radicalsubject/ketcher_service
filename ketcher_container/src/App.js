@@ -1,23 +1,39 @@
-import logo from './logo.svg';
-import './App.css';
+// import logo from './logo.svg';
+// import './App.css';
+import React from 'react'
+// @ts-ignore
+// import Miew from 'miew'
+// import 'miew/dist/Miew.min.css'
+// @ts-ignore
+import { Editor } from 'ketcher-react'
+// @ts-ignore
+import { RemoteStructServiceProvider } from 'ketcher-core'
+import 'ketcher-react/dist/index.css'
+// import styled from "styled-components"
+
+// (global as any).Miew = Miew
+
+let structServiceProvider: any = new RemoteStructServiceProvider(
+    process.env.REACT_APP_HOSTED_INDIGO_URL // see environment in docker-compose
+)
+if (process.env.MODE === 'standalone') {
+  const { StandaloneStructServiceProvider } = require('ketcher-standalone')
+  structServiceProvider = new StandaloneStructServiceProvider()
+}
+
+function sayHello() {
+  alert('You clicked me!');
+}
+// Usage
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+    <Editor
+      staticResourcesUrl={process.env.PUBLIC_URL}
+      structServiceProvider={structServiceProvider}
+    />
+    <button onClick={sayHello}>Default</button>;
     </div>
   );
 }
