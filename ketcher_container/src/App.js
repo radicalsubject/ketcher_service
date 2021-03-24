@@ -1,5 +1,5 @@
 // import logo from './logo.svg';
-// import './App.css';
+import './App.css';
 import React from 'react'
 // @ts-ignore
 // import Miew from 'miew'
@@ -21,10 +21,10 @@ if (process.env.MODE === 'standalone') {
   structServiceProvider = new StandaloneStructServiceProvider()
 }
 
-function sayHello() {
-  alert('You clicked me!');
-}
-// Usage
+// function sayHello() {
+//   alert('You clicked me!');
+// }
+// // Usage
 
 function App() {
   return (
@@ -33,7 +33,6 @@ function App() {
       staticResourcesUrl={process.env.PUBLIC_URL}
       structServiceProvider={structServiceProvider}
     />
-    <button onClick={sayHello}>Default</button>;
     </div>
   );
 }

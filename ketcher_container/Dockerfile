@@ -9,7 +9,7 @@ ENV PATH /ketcher_container/node_modules/.bin:$PATH
 
 # add app
 COPY package.json .
-COPY packages .
+COPY packages/ ./packages
 COPY .babelrc .
 RUN yarn 
 RUN npm cache clean --force
