@@ -6,7 +6,7 @@ services:
       context: ./ketcher_container
       dockerfile: Dockerfile
     container_name: ketcher_container
-    # tty: true # this fucker is a must for container to run - why?
+    tty: true # this fucker is a must for container to run - why?
     restart: unless-stopped
     volumes:
       - /ketcher_container/node_modules
@@ -14,7 +14,7 @@ services:
       - /ketcher_container/packages/ketcher-react/node_modules
     ports:
       - 3001:3000
-      - 5001:5000
+      # - 5001:5000
     environment:
       - CHOKIDAR_USEPOLLING=true
       - COMPOSE_CONVERT_WINDOWS_PATHS=1 # unnesessary till now, but maybe itll help someday
@@ -36,7 +36,7 @@ services:
       - indigo_container
     depends_on:
       - indigo_container
-      # - ketcher_container
+      - ketcher_container
 
   indigo_container:
     image: epmlsop/indigo_service:latest
