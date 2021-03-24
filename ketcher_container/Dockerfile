@@ -8,10 +8,13 @@ WORKDIR /ketcher_container
 ENV PATH /ketcher_container/node_modules/.bin:$PATH
 
 # add app
-COPY . ./
+COPY package.json ./
+COPY packages/ ./
+COPY .babelrc ./
 RUN yarn 
 
-# RUN yarn workspaces run build
+RUN yarn workspaces run build
+COPY . ./
 
 # # start app
 # CMD ["npm", "start"]
