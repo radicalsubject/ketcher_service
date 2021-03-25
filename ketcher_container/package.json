@@ -20,7 +20,8 @@
     "react-scripts": "latest",
     "styled-components": "latest",
     "typescript": "latest",
-    "web-vitals": "latest"
+    "web-vitals": "latest",
+    "ketcher-react": "2.1.0"
   },
   "scripts": {
     "start": "react-scripts start",
