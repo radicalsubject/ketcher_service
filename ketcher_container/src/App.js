@@ -29,10 +29,18 @@ if (process.env.MODE === 'standalone') {
 function App() {
   return (
     <div>
+    <p>API_URL: {process.env.REACT_APP_HOSTED_INDIGO_URL}</p>
+    <br></br>
+    <br></br>
+    <br></br>
+    <br></br>
+    <br></br>
+    <div>
     <Editor
       staticResourcesUrl={process.env.PUBLIC_URL}
       structServiceProvider={structServiceProvider}
     />
+    </div>
     </div>
   );
 }
