@@ -26,7 +26,7 @@ class RemoteStructServiceProvider implements StructServiceProvider {
   private readonly apiPath: string
   mode: ServiceMode = 'remote'
 
-  constructor(apiPath: string) {
+  constructor (apiPath: string) {
     let currentApiPath = apiPath
     const params = new URLSearchParams(document.location.search)
     if (params.has('api_path')) {
@@ -39,6 +39,7 @@ class RemoteStructServiceProvider implements StructServiceProvider {
   }
 
   createStructService(options: StructServiceOptions): StructService {
+    console.log("this.apiPath")
     return new RemoteStructService(this.apiPath, options)
   }
 }

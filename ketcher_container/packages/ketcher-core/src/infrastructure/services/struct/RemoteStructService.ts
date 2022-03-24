@@ -114,7 +114,7 @@ class RemoteStructService implements StructService {
     let indigoVersion: string
     let imagoVersions: Array<string>
     let isAvailable: boolean = false
-
+    console.log(this.apiPath)
     try {
       const response = await request('GET', this.apiPath + 'info')
       indigoVersion = response['indigo_version']

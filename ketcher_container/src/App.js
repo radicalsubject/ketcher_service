@@ -11,11 +11,12 @@ import { RemoteStructServiceProvider } from 'ketcher-core'
 import 'ketcher-react/dist/index.css'
 
 // console.log(process.env.REACT_APP_HOSTED_INDIGO_URL)
-// console.log( process.env.PUBLIC_URL)
+
 
 let structServiceProvider: any = new RemoteStructServiceProvider(
   process.env.REACT_APP_HOSTED_INDIGO_URL // see environment in docker-compose
 )
+// console.log(structServiceProvider)
 
 function App() {
   // console.log(structServiceProvider)
